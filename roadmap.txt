@@ -1,0 +1,123 @@
+RESUME SUJET\
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+TESTER LES LEAKS A CHAQUE MODIF
+
+1. prompt qui affiche le chemin de travail
+
+1. fleche du haut (historique de travail)
+
+2. Ne pas interpréter les guillemets non fermés ou les caractères spéciaux qui ne sont pas nécessaires pour le
+sujet tels que (\) (;)
+
+2. '' et "" ne gere pas les metacaracteres apart le "" qui gere le $
+
+3. affichage variable environnment ($VARNAME)
+
+4. Builtin
+
+5.trouver et executer le bon executable au bon endroit
+
+6.redirections 
+
+    < redirige input
+    > output
+    << attend un delimiteur et lit lentree jusqua ce delimiteur (ne garde pas lentree en historique)
+    >> ajoute l'output a la fin dun fichier (si il n'existe pas il est cree)
+
+    | prend loutput et le donne en input
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+ROADMAP
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+faire realoc et realloc tabtab
+
+1/// FAIRE LE PROMPT ET HISTORIQUE
+
+    trouver les variables environnement qui donne user@hostname:(remplacer /home/user par ~)/path_courant
+
+    Faire l'historique
+
+2/// TOKENISER LE PROMPT
+
+
+Reception des argument
+
+    char **fonction ressemblant a count word pour split (char *arg)
+
+        l'argument commence au premier caractere rencontre en sautant les espaces
+
+        si on croise ' ou " on avance jusqu'a en trouver une deuxieme en sautant les  et les espaces
+
+        l'argument se termine forcement par un espace ou '\0'
+
+        on realloc le tableau de tableau et on le rempli de l'argument
+
+        on boucle jusqua avoir parcouru toute la string
+
+Tokenisation
+
+    char **fonctione tokenisant les argument triees(char **tab)
+
+    cree un tableau de tableau (tokens)
+
+    boucler tout le tabtab
+
+        mettre chaque argument dans l'index de tokens
+
+        des que je croise un pipe et que le strlen == 1 realoc tokens et incrementer l'index de tokens
+
+    return tokens
+
+/////////////
+Exemple : 
+
+"ec'h'o" -n "|" | wc -l | ./push_swap 32 34 56 78 "4 65 6"
+
+tokens[0] = echo -n "|" 
+tokens[1] = wc -l
+tokens[2] = ./push_swap 32 34 56 78 "4 65 6"
+
+/////////////
+
+
+3/// gerrer le env
+
+    
+
+4/// EXEC
+
+split le path avec (path, ":")
+realloc chaque str en rajoutant le /premier argument du token
+realloc le tableau en rajoutant premier argument du token seul a la derniere case
+
+fork
+enfant :
+    boucler execve tant que le tableau na pas ete totalement parcouru ou que execve renvoie autre chose que -1
+        execve (tab[i], &token.args[1], envp)
+parent :
+    wait pid
+suite du programme
+
+/////////////////////////////////////////////////////////////
+RESTE A FAIRE 
+
+
+$? $
+creer notre getenv
+ajout de variable
+export
+unset
+Parsing quote dquote 
+Pipes 
+les redirections
+implementer les CTRL
+
+/////////////////////////////////////////////////////////////

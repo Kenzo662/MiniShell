@@ -1,0 +1,35 @@
+ctrl-D sans caractere segfault
+
+
+
+/// SUP QUOTE DQUOTE ////////////////////////////////////////////////////////////////////////////
+
+je parcours l'argument
+
+si je rencontre une quote ou une dquote je la suprimme
+
+je change d'etat et je ne modifie rien tant que je nai pas changer d'etat
+
+au changement d'etat je suprime le caractere
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// $ ////////////////////////////////////////////////////////////////////////////////////////////
+
+je parcous l'argument
+
+si je suis en statut QUOTE je ne fait rien
+
+sinon des que je rencontre un $ je parcours tant que je ne trouve pas ni de QUOTE DQUOTE FSPACE SPACE
+
+des que jen trouve un je garde le mot et je le stocke dans une str 
+
+et je stocke le resultat de KenzEnv dans une variable
+
+pour faire ca :
+    je cree une variable j
+    [1] je parcours la chaine en incrementant j jusqua $ et je reprend l'incrementation apres le nom de la variable
+    je malloc une nouvelle chaine de la taille de j + strlen du resultat de kenzenv 
+    je refait le [1] en ciopiant la chaine initiale dans la nouvelle chaine
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
