@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-char    **ft_create_var(char *var_to_create, char **var_tab)
+char    **ft_export(char *var_to_create, char **var_tab)
 {
     int     i;
     int     pos;
@@ -77,7 +77,7 @@ void    ft_bubble_export(char **var_tab)
 
 void    ft_swap_str(char **var_tab, int j)
 {
-    char * tmp;
+    char *tmp;
 
     tmp = var_tab[j];
     var_tab[j] = var_tab[j + 1];

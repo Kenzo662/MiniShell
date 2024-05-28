@@ -4,7 +4,8 @@ CFLAGS = -Wall -Wextra -g
 
 NAME = minishell
 
-SRCS = srcs/main.c\
+SRCS =	srcs/main.c\
+		srcs/flux.c\
 		srcs/exec.c \
 		srcs/utils.c \
 		srcs/export.c \
@@ -27,6 +28,7 @@ objs/%.o : src/%.c
 
 $(NAME) :   $(OBJS)
 	@echo "Make..."
+	@rm -rf objs
 	@mkdir objs
 	@$(MAKE) -C libft
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L./libft/ -lft -I$(brew --prefix readline)/include -L$(brew --prefix readline)/lib -lreadline

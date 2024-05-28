@@ -33,6 +33,8 @@ void    ft_add_var(t_var *var, int *k)
     if (var->newstr)
         free(var->newstr);
     var->newstr= ft_strdup(var->tmp);
+    free(var->tmp);
+    free(var->var);
 }
 
 char    *ft_swap_var(char *str, char **env)

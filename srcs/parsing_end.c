@@ -43,13 +43,15 @@ char *ft_parsing_end(char *str)
         {
             state = strstate;
             i++;
-            ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
+            if (str[i])
+                ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
         }
         if ((state == DQUOTE && str[i] == '\"') || (state == QUOTE && str[i] == '\''))
         {
             state = SEARCH;
             i++;
-            ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
+            if (str[i])
+                ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
         }
         else
         {
@@ -57,8 +59,8 @@ char *ft_parsing_end(char *str)
             {   
                 newstr = ft_realloc(newstr);
                 newstr[j] = str[i];
+                ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
             }
-            ft_change_agstate(ft_find_cstate(str[i], str[i + 1]), &strstate);
             j++;
             i++;
         }

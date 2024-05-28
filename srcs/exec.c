@@ -23,6 +23,7 @@ char    **ft_create_path(char *path, char *cmd)
         i++;
         j++;      
     }
+    ft_freetabtab(tmppath);
     return (tbpath);
 }
 

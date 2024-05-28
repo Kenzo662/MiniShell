@@ -28,6 +28,23 @@ typedef enum    arg_state
     SEARCH,
 }               arg_state;
 
+typedef enum    e_flux
+{
+    IN,
+    OUT,
+    ERR,
+    INIT,
+    INOUT,
+}               e_flux;
+
+typedef struct  s_flux
+{
+    int savein;
+    int saveout;
+    int actualfd;
+    e_flux    actualflux;
+}               t_flux;
+
 typedef struct  s_arg
 {
     char        **args;
@@ -64,6 +81,7 @@ typedef struct s_var
 void     ft_cd(char **args);
 void     ft_echo(t_tokens token);
 char     **ft_unset(char *varname, char **env);
+char    **ft_export(char *var_to_create, char **var_tab);
 
 // BUILTINS.UTILS
 
@@ -83,7 +101,6 @@ void    ft_bubble_export(char **var_tab);
 void    ft_swap_str(char **var_tab, int j);
 void    ft_display_export(char **export_tab);
 int     ft_check_var(char *var, char **var_tab);
-char    **ft_create_var(char *var_to_create, char **var_tab);
 
 // PARSING.UTILS
 
@@ -121,5 +138,11 @@ char	**ft_tb_realloc(char **tb);
 
 char    **ft_create_path(char *path, char *cmd);
 void    ft_exec(char *cmd, char **arg, char **env);
+
+// FLUX
+
+char    **ft_checkredirect(char **args, t_flux *flux);
+void    ft_change_flux(e_flux *brulux, int savein, int saveout);
+
 
 #endif

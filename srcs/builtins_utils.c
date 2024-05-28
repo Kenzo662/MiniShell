@@ -16,8 +16,10 @@ char    *ft_cutdir(char *path , char *arg)
 {
     int i;
     char    *newpath;
+    char    *tmp;
 
     i = 0;
+    tmp = NULL;
     if (!arg || ft_strcmp(arg, "~") == 0)
     {
         i = 6;
@@ -28,8 +30,9 @@ char    *ft_cutdir(char *path , char *arg)
     }
     else
     {  
-        newpath = ft_strjoin(path, "/");
-        newpath = ft_strjoin(newpath, arg);
+        tmp = ft_strjoin(path, "/");
+        newpath = ft_strjoin(tmp, arg);
+        free(tmp);
     }
     return(newpath);
 }
@@ -57,6 +60,8 @@ char    *ft_get_env(char **env, char *var_name)
                 while (var_tab[j])
                 {
                     tmp = ft_strjoin(value_var, "=");
+                    if (value_var)
+                        free(value_var);
                     value_var = ft_strjoin(tmp, var_tab[j]);
                     j++;
                     free(tmp);
