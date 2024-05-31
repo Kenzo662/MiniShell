@@ -6,37 +6,12 @@
 /*   By: evella <evella@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 23:06:41 by evella            #+#    #+#             */
-/*   Updated: 2023/10/01 23:13:01 by evella           ###   ########.fr       */
+/*   Updated: 2024/05/28 17:20:24 by evella           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-
-static int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-static char	*ft_strcpy(char *dest, char *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
+#include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -46,9 +21,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 && !s2)
 		return (NULL);
 	else if (!s1)
-		return ((char *)s2);
+		return (ft_strdup((char *)s2));
 	else if (!s2)
-		return ((char *)s1);
+		return (ft_strdup((char *)s1));
 	len = ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1;
 	str = (char *)malloc(sizeof(char) * len);
 	if (!str)

@@ -1,6 +1,7 @@
 #include "../include/minishell.h"
 
-arg_state ft_find_cstate(char c, char next)
+
+arg_state ft_find_cstate_2(char c, char next)
 {
     if (c == 32 && next != 32)
         return (FSPACE);
@@ -16,7 +17,7 @@ arg_state ft_find_cstate(char c, char next)
         return (SEARCH);
 }
 
-int ft_change_agstate(arg_state cstate, arg_state *agstate)
+int ft_change_agstate_2(arg_state cstate, arg_state *agstate)
 {
     if (*agstate == SEARCH && cstate != DSPACE)
     {
@@ -29,6 +30,59 @@ int ft_change_agstate(arg_state cstate, arg_state *agstate)
     else if (*agstate == SEARCH && cstate == DSPACE)
         return (0);
     else if ((cstate == FSPACE || cstate == DSPACE) && *agstate == FSPACE)
+    {
+        *agstate = SEARCH;
+        return (3);
+    }
+    else if ((cstate == DQUOTE && *agstate == DQUOTE) 
+    || (cstate == QUOTE && *agstate == QUOTE))
+        *agstate = FSPACE;
+    else if ((cstate == DQUOTE || cstate == QUOTE) 
+    && (*agstate != DQUOTE && *agstate != QUOTE))
+        *agstate = cstate;
+    return (2);
+}
+
+arg_state ft_find_cstate(char c, char next)
+{
+    if (c == '>' || (c == '>' &&  next == '>')
+    || c == '<' || (c == '<' &&  next == '<'))
+        return (OP);
+    if (c == 32 && next != 32)
+        return (FSPACE);
+    else if  (c == 0)
+        return (FSPACE);
+    else if (c == 39)
+        return (QUOTE);
+    else if (c == 34)
+        return (DQUOTE);
+    else if (c == 32)
+        return (DSPACE);
+    else
+        return (SEARCH);
+}
+
+int ft_change_agstate(arg_state cstate, arg_state *agstate, int j)
+{
+    if ((*agstate == SEARCH && cstate != DSPACE) || (*agstate == FSPACE && cstate == OP))
+    {
+        if (*agstate == FSPACE && cstate == OP && j > 0)
+        {
+            *agstate = SEARCH;
+            return (3);
+        }
+        if (cstate == DQUOTE || cstate == QUOTE)
+            *agstate = cstate;
+        else if (cstate == OP)
+            *agstate = OP;
+        else
+            *agstate = FSPACE;
+        return (1);
+    }
+    else if (*agstate == SEARCH && cstate == DSPACE)
+        return (0);
+    else if (((cstate == FSPACE || cstate == DSPACE || cstate == OP) && *agstate == FSPACE)
+    || ((cstate == SEARCH  || cstate == DQUOTE || cstate == QUOTE) && *agstate == OP))
     {
         *agstate = SEARCH;
         return (3);

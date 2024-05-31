@@ -15,7 +15,7 @@ void    ft_check_env(char *str)
 char    *ft_cutdir(char *path , char *arg)
 {
     int i;
-    char    *newpath;
+    char	*newpath;
     char    *tmp;
 
     i = 0;
@@ -29,7 +29,7 @@ char    *ft_cutdir(char *path , char *arg)
         ft_strncpy(newpath, path, i + 1);
     }
     else
-    {  
+    {
         tmp = ft_strjoin(path, "/");
         newpath = ft_strjoin(tmp, arg);
         free(tmp);
@@ -75,16 +75,3 @@ char    *ft_get_env(char **env, char *var_name)
     var_tab = NULL;
     return (value_var);
 }
-
-/* int main(int ac, char **av, char **envp)
-{
-    (void)ac;
-    (void)av;
-
-    char    **env = ft_create_env(envp);
-
-
-    //ft_printtabtab(env);
-    ft_bubble_export(env);
-    ft_freetabtab(env);
-} */

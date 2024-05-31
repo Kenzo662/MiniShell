@@ -5,7 +5,9 @@ char   *ft_get_var(char *str, int *i, int *j, char **env)
     char    *var;
     char    *tmp;
 
-    while (str[*i] && ft_find_cstate(str[*i], str[(*i) + 1]) == SEARCH && !( *j > 2 && str[*i] == '$'))
+    var = NULL;
+    while (str[*i] && ft_find_cstate(str[*i], str[(*i) + 1]) == SEARCH 
+    && !( *j > 2 && str[*i] == '$') && str[*i] != '\n')
     {
         (*i)++;
         (*j)++;
@@ -33,8 +35,12 @@ void    ft_add_var(t_var *var, int *k)
     if (var->newstr)
         free(var->newstr);
     var->newstr= ft_strdup(var->tmp);
-    free(var->tmp);
-    free(var->var);
+    if (var->tmp)
+        free(var->tmp);
+    var->tmp = NULL;
+    if (var->var)
+        free(var->var);
+    var->var = NULL;
 }
 
 char    *ft_swap_var(char *str, char **env)
@@ -49,9 +55,10 @@ char    *ft_swap_var(char *str, char **env)
     strstate = SEARCH;
     var.newstr = NULL;
     var.tmp = NULL;
+    var.var = NULL;
     while (str[index.i])
     {
-        ft_change_agstate(ft_find_cstate(str[index.i], str[index.i + 1]), &strstate);
+        ft_change_agstate_2(ft_find_cstate_2(str[index.i], str[index.i + 1]), &strstate);
         if (str[index.i] == '$' && strstate != QUOTE)
         {
             var.var = ft_get_var(str, &index.i, &index.j, env);

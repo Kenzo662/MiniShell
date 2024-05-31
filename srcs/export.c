@@ -9,7 +9,7 @@ char    **ft_export(char *var_to_create, char **var_tab)
     i = 0;
     if (!var_to_create)
         return(ft_bubble_export(var_tab), var_tab);
-    if (ft_strchr(var_to_create, '=') == NULL)
+    if (ft_strchr(var_to_create, '=') == NULL || ft_strcmp(var_to_create, "=") == 0)
         return (var_tab);
     if (ft_check_var(var_to_create, var_tab) != 0)
     {
@@ -29,7 +29,7 @@ int     ft_check_var(char *var, char **var_tab)
     int i;
     char    **tmp;
     char    **tmp2;
-    
+
     i = 0;
     tmp = ft_split(var, '=');
     while(var_tab[i])
@@ -87,8 +87,28 @@ void    ft_swap_str(char **var_tab, int j)
 void    ft_display_export(char **export_tab)
 {
     int i;
+    int j;
+    int count;
 
-    i = -1;
-    while (export_tab[++i])
-        printf("declare -x %s\n", export_tab[i]);
+    i = 0;
+    j = 0;
+    count = 0;
+    while (export_tab[i])
+    {
+        count = 0;
+        j = 0;
+        printf ("declare -x ");
+        while (export_tab[i][j])
+        {
+            if (export_tab[i][j - 1] == '=' && count == 0)
+            {
+                printf("\"");
+                count = 1;
+            }
+            printf("%c", export_tab[i][j]);
+            j++;
+        }
+        printf("\"\n");
+        i++;
+    }
 }

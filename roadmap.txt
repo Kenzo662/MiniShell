@@ -1,4 +1,4 @@
-valgrind = valgrind --leak-check=full --show-leak-kinds=all --suppressions=valgrind.supp ./minishell
+valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-origins=yes --suppressions=valgrind.supp ./minishell
 
 RESUME SUJET\
 
@@ -21,7 +21,7 @@ sujet tels que (\) (;)
 
 5.trouver et executer le bon executable au bon endroit
 
-6.redirections 
+6.redirections
 
     < redirige input
     > output
@@ -79,11 +79,11 @@ Tokenisation
     return tokens
 
 /////////////
-Exemple : 
+Exemple :
 
 "ec'h'o" -n "|" | wc -l | ./push_swap 32 34 56 78 "4 65 6"
 
-tokens[0] = echo -n "|" 
+tokens[0] = echo -n "|"
 tokens[1] = wc -l
 tokens[2] = ./push_swap 32 34 56 78 "4 65 6"
 
@@ -92,7 +92,7 @@ tokens[2] = ./push_swap 32 34 56 78 "4 65 6"
 
 3/// gerrer le env
 
-    
+
 
 4/// EXEC
 
@@ -109,17 +109,27 @@ parent :
 suite du programme
 
 /////////////////////////////////////////////////////////////
-RESTE A FAIRE 
+RESTE A FAIRE
 
 
-$? $
-creer notre getenv
-ajout de variable
-export
-unset
-Parsing quote dquote 
-Pipes 
+$?
+Pipes
 les redirections
 implementer les CTRL
+variable environnement \n
 
 /////////////////////////////////////////////////////////////
+
+je parcours les argumments
+
+si je suis en etat quote ou dquote je ne change rien
+
+    sinon des que je croise un opperateur dans un bon state
+
+        si il ny a que lui dans l'argumment jenvoie a la redirec l'argument d'apres
+        sinon je parcours tant que je suis dans l'argument ou que je ne rencontre pas un autre opperateur
+    
+CHANGER STATE A CHAQUE CHAR ET SON STRING
+
+
+

@@ -26,19 +26,21 @@ char	**ft_tb_realloc(char **tb)
 
 
 	i = 0;
-    
+
 	if (!tb)
 		return (ft_calloc((2), sizeof(char *)));
     while (tb[i])
-    {   
+    {
         i++;
     }
-    
 	newtb = ft_calloc(sizeof(char *) , i + 2);
     i = 0;
 	while (tb[i])
 	{
-		newtb[i] = ft_strdup(tb[i]);
+		if (tb[i][0])
+			newtb[i] = ft_strdup(tb[i]);
+		else
+			newtb[i] = ft_calloc(sizeof(char), 1);
 		i++;
 	}
 	newtb[i] = NULL;
@@ -52,7 +54,7 @@ void	*ft_freetabtab(char **tb)
     int i;
 
     i = 0;
-	
+
 	if (!tb)
 		return (NULL);
 	while (tb[i])
@@ -92,5 +94,5 @@ void    ft_print_tokens(t_tokens *tokens)
         ft_printf("[//////////////////////////]\n");
         i++;
     }
-    
+
 }

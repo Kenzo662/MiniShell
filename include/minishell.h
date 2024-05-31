@@ -19,13 +19,36 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+# define DEF             "\001\e\033[0m\002"
+# define RED             "\001\e\033[0;31m\002"
+# define GREEN             "\001\e\033[0;32m\002"
+# define YELLOW         "\001\e\033[0;33m\002"
+# define BLUE             "\001\e\033[0;34m\002"
+# define PURPLE         "\001\e\033[0;35m\002"
+# define CYAN             "\001\e\033[0;36m\002"
+# define WHITE             "\001\e\033[0;37m\002"
+# define BOLD_RED         "\001\e\033[1;31m\002"
+# define BOLD_GREEN     "\001\e\033[1;32m\002"
+# define BOLD_YELLOW     "\001\e\033[1;33m\002"
+# define BOLD_BLUE         "\001\e\033[1;34m\002"
+# define BOLD_PURPLE     "\001\e\033[1;35m\002"
+# define BOLD_CYAN         "\001\e\033[1;36m\002"
+# define BOLD_WHITE     "\001\e\033[1;37m\002"
+# define BOLD_BLACK     "\001\e\033[1;30m\002"
+# define COLOR            "\001\e\033[38;2;255;153;153m\002"
+# define BG_GREEN        "\001\e\033[48;2;0;200;0m\002"
+# define BG_RED            "\001\e\033[48;2;200;70;0m\002"
+# define FG_GREEN        "\001\e\033[38;2;0;200;0m\002"
+# define FG_RED            "\001\e\033[38;2;200;70;0m\002"
+
 typedef enum    arg_state
 {
+    FSPACE,
     QUOTE,
     DQUOTE,
-    FSPACE,
     DSPACE,
     SEARCH,
+    OP,
 }               arg_state;
 
 typedef enum    e_flux
@@ -63,9 +86,9 @@ typedef struct  s_index
 
 typedef struct  s_tokens
 {
-    char    *token;
-    char    **args;
-
+    char        *token;
+    char        **args;
+    arg_state   *strstate;
 }               t_tokens;
 
 typedef struct s_var
@@ -74,6 +97,12 @@ typedef struct s_var
     char    *var;
     char    *tmp;
 }               t_var;
+
+typedef struct s_parsend
+{
+    char    *newstr;
+    char    *str;
+}               t_parsend;
 
 
 // BUILTINS
@@ -93,7 +122,7 @@ char    *ft_get_env(char **env, char *var_name);
 
 char    **ft_create_env(char **envp);
 char    **ft_tab_cat(char **tb, int pos);
-int    ft_builtins_exec(t_tokens token, char **env);
+int    ft_builtins_exec(t_tokens token, char ***env);
 
 // EXPORT.C
 
@@ -104,8 +133,9 @@ int     ft_check_var(char *var, char **var_tab);
 
 // PARSING.UTILS
 
-int     ft_change_agstate(arg_state cstate, arg_state *agstate);
+int     ft_change_agstate(arg_state cstate, arg_state *agstate, int j);
 int     ft_find_arg(char *str, t_arg *arg, t_index *index);
+int     ft_find_arg_2(char *str, t_arg *arg, t_index *index);
 void    ft_joinarg(t_arg *arg, char *str, t_index *index);
 void    ft_new_arg(t_arg *arg, t_index *index);
 char    *ft_gnl(char *str);
@@ -115,14 +145,15 @@ arg_state ft_find_cstate(char c, char next);
 // PARSING.ENV
 
 void    ft_vr(char **tb, char **env);
-char    *ft_parsing_end(char *str);
-char    **ft_last_parsing(char **tb);
+void    ft_last_parsing(t_tokens *tokens);
+char    *ft_parsing_end(t_tokens *tokens, char *str);
 
 // PARSING
 
 char        *ft_print_prompt();
 char        **ft_tokeniser(char *uprompt, char **env);
 char        **ft_sort_uprompt(char *str);
+char        **ft_sort_uprompt_2(char *str);
 char        **ft_sort_token(char **tb);
 t_tokens    *ft_receive_uprompt(char *uprompt, char **env);
 
@@ -138,11 +169,14 @@ char	**ft_tb_realloc(char **tb);
 
 char    **ft_create_path(char *path, char *cmd);
 void    ft_exec(char *cmd, char **arg, char **env);
+void    ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulux);
+char    **ft_export_exec(char **args, char **env);
 
 // FLUX
 
-char    **ft_checkredirect(char **args, t_flux *flux);
+char    **ft_checkredirect(t_tokens *tokens, t_flux *flux);
 void    ft_change_flux(e_flux *brulux, int savein, int saveout);
-
+arg_state ft_find_cstate_2(char c, char next);
+int ft_change_agstate_2(arg_state cstate, arg_state *agstate);
 
 #endif

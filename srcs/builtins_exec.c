@@ -1,10 +1,10 @@
 #include "../include/minishell.h"
 
-int    ft_builtins_exec(t_tokens token, char **env)
+int    ft_builtins_exec(t_tokens token, char ***env)
 {
     char    buf[4096];
 
-    if (!token.args[0][0])
+    if (!token.args[0] || !token.args[0][0])
         return (0);
     if (ft_strcmp(token.args[0], "cd") == 0)
         return (ft_cd(token.args), 0);
@@ -13,11 +13,11 @@ int    ft_builtins_exec(t_tokens token, char **env)
     else if (ft_strcmp(token.args[0], "pwd") == 0)
         return (printf("%s\n", getcwd(buf, 4096)), 0);
     else if (ft_strcmp(token.args[0], "env") == 0)
-        return (ft_printtabtab(env), 0);
+        return (ft_printtabtab(*env), 0);
     else if (ft_strcmp(token.args[0], "exit") == 0)
         return (2);
     else
-        ft_exec(token.args[0], token.args, env);
+        return (ft_exec(token.args[0], token.args, *env), 0);
     return (1);
 }
 
@@ -27,6 +27,7 @@ char    **ft_create_env(char **envp)
     int     i;
 
     i = 0;
+    env = NULL;
     while (envp[i])
         i++;
     env = ft_calloc(i + 1, sizeof(char *));
@@ -36,6 +37,7 @@ char    **ft_create_env(char **envp)
     env[i] = NULL;
     return (env);
 }
+
 char    **ft_tab_cat(char **tb, int pos)
 {
     char    **newenv;
@@ -61,4 +63,16 @@ char    **ft_tab_cat(char **tb, int pos)
     }
     ft_freetabtab(tb);
     return (newenv);
+}
+
+char    **ft_export_exec(char **args, char **env)
+{
+    int i;
+
+    i = 0;
+    if (!args[1])
+        env = ft_export(NULL, env);
+    while (args[++i])
+        env = ft_export(args[i], env);
+    return (env);
 }
