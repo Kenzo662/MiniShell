@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-
+int g_exit;
 /* int main(int ac, char **av, char **envp)
 {
     t_tokens    *tokens;
@@ -55,7 +55,6 @@ int main(int ac, char **av, char **envp)
             ft_prompt_exec(tokens, &index, env, &brulux);
         free(tokens);
     }
-    printf("%d\n", index.k);
     ft_freetabtab(*env);
     free(env);
     rl_clear_history();

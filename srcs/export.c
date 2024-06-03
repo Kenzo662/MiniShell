@@ -9,6 +9,8 @@ char    **ft_export(char *var_to_create, char **var_tab)
     i = 0;
     if (!var_to_create)
         return(ft_bubble_export(var_tab), var_tab);
+    if (ft_isdigit(var_to_create[0]) == 1)
+        return (var_tab);
     if (ft_strchr(var_to_create, '=') == NULL || ft_strcmp(var_to_create, "=") == 0)
         return (var_tab);
     if (ft_check_var(var_to_create, var_tab) != 0)

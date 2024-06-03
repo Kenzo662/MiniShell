@@ -41,7 +41,7 @@
 # define FG_GREEN        "\001\e\033[38;2;0;200;0m\002"
 # define FG_RED            "\001\e\033[38;2;200;70;0m\002"
 
-int g_exit;
+extern int g_exit;
 
 typedef enum    arg_state
 {

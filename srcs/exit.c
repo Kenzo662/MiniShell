@@ -48,7 +48,7 @@ long long    ft_exit(char **args)
 
     n = 0;
     if (!args[1])
-        return (2);
+        return (0);
     if (args[1] && !args[2])
     {
         if (ft_check_args_exit(args[1]) == 1)
