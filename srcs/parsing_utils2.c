@@ -25,7 +25,7 @@ int    ft_find_arg(char *str, t_arg *arg, t_index *index)
             ft_new_arg(arg, index);
         index->i++;
     }
-    if (arg->agstate == FSPACE)
+    if (arg->agstate == FSPACE || arg->agstate == OP)
         return (ft_new_arg(arg, index), 0);
     else if(index->i == 0)
     {

@@ -5,6 +5,7 @@ CFLAGS = -Wall -Wextra -g
 NAME = minishell
 
 SRCS =	srcs/main.c\
+		srcs/exit.c\
 		srcs/flux.c\
 		srcs/exec.c \
 		srcs/utils.c \

@@ -1,9 +1,13 @@
 #include "../include/minishell.h"
 
+int g_exit;
+
+
 int    ft_builtins_exec(t_tokens token, char ***env)
 {
     char    buf[4096];
-
+    
+    g_exit = 0;
     if (!token.args[0] || !token.args[0][0])
         return (0);
     if (ft_strcmp(token.args[0], "cd") == 0)
@@ -15,7 +19,7 @@ int    ft_builtins_exec(t_tokens token, char ***env)
     else if (ft_strcmp(token.args[0], "env") == 0)
         return (ft_printtabtab(*env), 0);
     else if (ft_strcmp(token.args[0], "exit") == 0)
-        return (2);
+        return (ft_exit(token.args));
     else
         return (ft_exec(token.args[0], token.args, *env), 0);
     return (1);

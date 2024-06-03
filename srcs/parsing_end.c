@@ -45,7 +45,7 @@ void ft_add_last_str(arg_state *strstate, arg_state *state, t_index *index, t_pa
         index->i++;
     }
 }
-char *ft_parsing_end(t_tokens *tokens, char *str)
+char *ft_parsing_end(char *str)
 {
     arg_state   strstate;
     arg_state   state;
@@ -143,7 +143,7 @@ void    ft_last_parsing(t_tokens *tokens)
         else
             tokentmp = ft_strdup(tmp);
         free(tmp);
-        tokens->args[i] = ft_parsing_end(tokens, tokens->args[i]);
+        tokens->args[i] = ft_parsing_end(tokens->args[i]);
         i++;
     }
     free(tokens->token);

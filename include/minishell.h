@@ -41,6 +41,8 @@
 # define FG_GREEN        "\001\e\033[38;2;0;200;0m\002"
 # define FG_RED            "\001\e\033[38;2;200;70;0m\002"
 
+int g_exit;
+
 typedef enum    arg_state
 {
     FSPACE,
@@ -58,6 +60,7 @@ typedef enum    e_flux
     ERR,
     INIT,
     INOUT,
+    ERRQ,
 }               e_flux;
 
 typedef struct  s_flux
@@ -122,7 +125,7 @@ char    *ft_get_env(char **env, char *var_name);
 
 char    **ft_create_env(char **envp);
 char    **ft_tab_cat(char **tb, int pos);
-int    ft_builtins_exec(t_tokens token, char ***env);
+int     ft_builtins_exec(t_tokens token, char ***env);
 
 // EXPORT.C
 
@@ -130,6 +133,11 @@ void    ft_bubble_export(char **var_tab);
 void    ft_swap_str(char **var_tab, int j);
 void    ft_display_export(char **export_tab);
 int     ft_check_var(char *var, char **var_tab);
+
+// EXIT.C
+
+long long   ft_exit(char **args);
+int         ft_check_args_exit(char *arg);
 
 // PARSING.UTILS
 
@@ -146,7 +154,7 @@ arg_state ft_find_cstate(char c, char next);
 
 void    ft_vr(char **tb, char **env);
 void    ft_last_parsing(t_tokens *tokens);
-char    *ft_parsing_end(t_tokens *tokens, char *str);
+char    *ft_parsing_end( char *str);
 
 // PARSING
 

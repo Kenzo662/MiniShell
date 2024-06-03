@@ -18,6 +18,7 @@ void ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulu
     else
         index->k = ft_builtins_exec(tokens[index->j], env);
     ft_freetabtab(tokens[index->j].args);
+    free(tokens[index->j].strstate);
     free(tokens->token);
     if (brulux->actualflux != INIT)
         ft_change_flux(&brulux->actualflux, brulux->savein, brulux->saveout);
