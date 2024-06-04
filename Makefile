@@ -4,46 +4,59 @@ CFLAGS = -Wall -Wextra -g
 
 NAME = minishell
 
-SRCS =	srcs/main.c\
-		srcs/exit.c\
-		srcs/flux.c\
-		srcs/exec.c \
-		srcs/utils.c \
-		srcs/export.c \
-		srcs/parsing.c \
-		srcs/builtins.c \
-		srcs/parsing_env.c \
-		srcs/parsing_end.c \
-		srcs/parsing_utils.c \
-		srcs/builtins_exec.c \
-		srcs/parsing_utils2.c \
-		srcs/builtins_utils.c
+DIR_SRCS	=	srcs
+DIR_OBJS	=	.objs
 
-OBJS = $(SRCS:.c=.o)
+LST_SRCS =	main.c\
+			flux.c\
+			exec.c \
+			exit.c \
+			utils.c \
+			export.c \
+			parsing.c \
+			builtins.c \
+			parsing_env.c \
+			parsing_end.c \
+			parsing_utils.c \
+			builtins_exec.c \
+			parsing_utils2.c \
+			builtins_utils.c
+
+LST_OBJS = $(LST_SRCS:.c=.o)
+
+SRCS		=	$(addprefix $(DIR_SRCS)/, $(LST_SRCS))
+OBJS		=	$(addprefix $(DIR_OBJS)/, $(LST_OBJS))
+
+ERASE		=	\033[2K\r
+BLUE		=	\033[34m
+YELLOW		=	\033[33m
+GREEN		=	\033[32m
+END			=	\033[0m
 
 all : $(NAME)
 
-objs/%.o : src/%.c
+$(DIR_OBJS)/%.o : $(DIR_SRCS)/%.c
+	@mkdir -p .objs
 	@$(CC) $(CFLAGS) -o $@ -c $<
+	@printf "$(BLUE) > Compilation :$(END) $<\n"
 	
 
 $(NAME) :   $(OBJS)
-	@echo "Make..."
-	@rm -rf objs
-	@mkdir objs
+	@printf "$(GREEN).c are compiled\n$(END)"
+	@printf "$(BLUE) > Libft Compilation ...\n$(END)"
 	@$(MAKE) -C libft
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L./libft/ -lft -I$(brew --prefix readline)/include -L$(brew --prefix readline)/lib -lreadline
-	@mv srcs/*.o objs/
-	@echo "Make Completed !"
+	@printf "$(ERASE)$(GREEN)Libft made !\n$(END)"
+	@$(CC) $(OBJS) $(CFLAGS)  -L./libft/ -lft -I$(brew --prefix readline)/include -L$(brew --prefix readline)/lib -lreadline -o $(NAME)
+	@printf "$(ERASE)$(GREEN)Minishell made !\n$(END)"
+
 clean   :
-	@echo "Clean..."
-	@make -C libft clean
-	@rm -rf srcs/*.o
-	@rm -rf objs/*.o
-	@echo "Clear !"
+	@printf "$(YELLOW)$(DIR_OBJS) removed$(END)\n"
+	@make clean -C libft
+	@rm -rdf $(DIR_OBJS)
+
 fclean  :   clean
-	@rm -f libft/libft.a
-	@rm -rf objs
+	@printf "$(YELLOW)Minishell removed$(END)\n"
+	@make fclean -C libft
 	@rm -f $(NAME)
 	
 re      :   fclean all

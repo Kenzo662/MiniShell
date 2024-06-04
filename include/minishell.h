@@ -92,6 +92,8 @@ typedef struct  s_tokens
     char        *token;
     char        **args;
     arg_state   *strstate;
+    int         nbtokens;
+    int         pipefd[2];
 }               t_tokens;
 
 typedef struct s_var
@@ -110,10 +112,11 @@ typedef struct s_parsend
 
 // BUILTINS
 
-void     ft_cd(char **args);
-void     ft_echo(t_tokens token);
-char     **ft_unset(char *varname, char **env);
-char    **ft_export(char *var_to_create, char **var_tab);
+void        ft_cd(char **args);
+void        ft_echo(t_tokens token);
+char        **ft_unset(char *varname, char **env);
+char        **ft_export(char *var_to_create, char **var_tab);
+long long    ft_exit(char **args);
 
 // BUILTINS.UTILS
 
@@ -133,11 +136,6 @@ void    ft_bubble_export(char **var_tab);
 void    ft_swap_str(char **var_tab, int j);
 void    ft_display_export(char **export_tab);
 int     ft_check_var(char *var, char **var_tab);
-
-// EXIT.C
-
-long long   ft_exit(char **args);
-int         ft_check_args_exit(char *arg);
 
 // PARSING.UTILS
 
@@ -182,7 +180,7 @@ char    **ft_export_exec(char **args, char **env);
 
 // FLUX
 
-char    **ft_checkredirect(t_tokens *tokens, t_flux *flux);
+char    **ft_checkredirect(t_tokens *tokens, t_flux *flux, int j);
 void    ft_change_flux(e_flux *brulux, int savein, int saveout);
 arg_state ft_find_cstate_2(char c, char next);
 int ft_change_agstate_2(arg_state cstate, arg_state *agstate);

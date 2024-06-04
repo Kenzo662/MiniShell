@@ -5,7 +5,7 @@ int    ft_builtins_exec(t_tokens token, char ***env)
     char    buf[4096];
     
     if (!token.args[0] || !token.args[0][0])
-        return (0);
+        return (-1);
     if (ft_strcmp(token.args[0], "cd") == 0)
         return (ft_cd(token.args), -1);
     else if (ft_strcmp(token.args[0], "echo") == 0)
@@ -18,7 +18,7 @@ int    ft_builtins_exec(t_tokens token, char ***env)
         return (ft_exit(token.args));
     else
         return (ft_exec(token.args[0], token.args, *env), -1);
-    return (1);
+    return (-1);
 }
 
 char    **ft_create_env(char **envp)

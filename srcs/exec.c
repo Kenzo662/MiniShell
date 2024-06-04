@@ -5,7 +5,8 @@ void ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulu
     int i;
 
     i = 0;
-    tokens[index->j].args = ft_checkredirect(tokens, brulux);
+    //printf("token.token = %s\n", tokens[index->j].token);
+    tokens[index->j].args = ft_checkredirect(tokens, brulux, index->j);
     if (tokens[index->j].args == NULL)
         return (ft_change_flux(&brulux->actualflux, brulux->savein, brulux->saveout));
     if(ft_strcmp(tokens[index->j].args[0], "export") == 0)
@@ -19,7 +20,7 @@ void ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulu
         index->k = ft_builtins_exec(tokens[index->j], env);
     ft_freetabtab(tokens[index->j].args);
     free(tokens[index->j].strstate);
-    free(tokens->token);
+    free(tokens[index->j].token);
     if (brulux->actualflux != INIT)
         ft_change_flux(&brulux->actualflux, brulux->savein, brulux->saveout);
     index->j++;
@@ -56,6 +57,7 @@ void    ft_exec(char *cmd, char **arg, char **env)
 {
     char    **path;
     pid_t   pid;
+    int     status;
     int     execr;
     int     i;
 
@@ -80,7 +82,11 @@ void    ft_exec(char *cmd, char **arg, char **env)
     else
     {
         ft_freetabtab(path);
-        wait(&pid);
+        wait(&status);
+        if (WIFEXITED(status))
+        {
+            g_exit = WEXITSTATUS(status);
+            printf("%d\n", g_exit);
+        }
     }
-    
 }

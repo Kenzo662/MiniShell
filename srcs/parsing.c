@@ -52,14 +52,16 @@ t_tokens    *ft_receive_uprompt(char *uprompt, char **env)
     while (tmpt[i])
         i++;
     tokens = ft_calloc(sizeof(*tokens), i + 1);
+    tokens[0].nbtokens = i;
     i = 0;
     while (tmpt[i])
     {
         tokens[i].token = ft_strdup(tmpt[i]);
         tokens[i].args = ft_sort_uprompt_2(tmpt[i]);
-        ft_last_parsing(tokens);
+        
         i++;
     }
+    ft_last_parsing(tokens);
     ft_freetabtab(tmpt);
     return (tokens);
 }

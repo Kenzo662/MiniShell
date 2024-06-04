@@ -14,7 +14,10 @@ char   *ft_get_var(char *str, int *i, int *j, char **env)
     }
     tmp = ft_calloc(sizeof(char), (*j) + 1);
     ft_strncpy(tmp, &str[(*i + 1) - (*j)], (*j) - 1);
-    var = ft_get_env(env, tmp);
+    if (tmp[0] == '?' && !tmp[1])
+        var = ft_itoa(g_exit);
+    else
+        var = ft_get_env(env, tmp);
     free(tmp);
     *j = 0;
     return (var);
@@ -59,7 +62,7 @@ char    *ft_swap_var(char *str, char **env)
     while (str[index.i])
     {
         ft_change_agstate_2(ft_find_cstate_2(str[index.i], str[index.i + 1]), &strstate);
-        if (str[index.i] == '$' && strstate != QUOTE)
+        if (str[index.i] == '$' && strstate != QUOTE  && str[index.i + 1])
         {
             var.var = ft_get_var(str, &index.i, &index.j, env);
             if (var.var)

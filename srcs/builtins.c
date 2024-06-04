@@ -20,8 +20,7 @@ void     ft_echo(t_tokens token)
     if (ft_strcmp(token.args[1], "-n") == 0)
         i++;
     while (token.args[i])
-    {
-
+    { 
         printf("%s", token.args[i]);
         i++;
         if (token.args[i] != NULL)

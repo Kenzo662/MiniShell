@@ -112,24 +112,11 @@ suite du programme
 RESTE A FAIRE
 
 
-$?
 Pipes
-les redirections
-implementer les CTRL
-variable environnement \n
+signaux
+
 
 /////////////////////////////////////////////////////////////
-
-je parcours les argumments
-
-si je suis en etat quote ou dquote je ne change rien
-
-    sinon des que je croise un opperateur dans un bon state
-
-        si il ny a que lui dans l'argumment jenvoie a la redirec l'argument d'apres
-        sinon je parcours tant que je suis dans l'argument ou que je ne rencontre pas un autre opperateur
-    
-CHANGER STATE A CHAQUE CHAR ET SON STRING
 
 
 

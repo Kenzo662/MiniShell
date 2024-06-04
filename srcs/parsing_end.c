@@ -84,7 +84,7 @@ void   ft_new_state(arg_state *strstate, char c)
         *strstate = SEARCH;
 }
 
-void ft_save_state(t_tokens *tokens)
+static void ft_save_state(t_tokens *tokens, int x)
 {
     int i;
     int j;
@@ -97,20 +97,20 @@ void ft_save_state(t_tokens *tokens)
     l = 0;
     k = 0;
     strstate = SEARCH;
-    tokens->strstate = NULL;
+    tokens[x].strstate = NULL;
     tmpstate = NULL;
-    while(tokens->args[i])
+    while(tokens[x].args && tokens[x].args[i])
     {
         j = 0;
-        while(tokens->args[i][j])
+        while(tokens[x].args[i][j])
         {
-            ft_new_state(&strstate, tokens->args[i][j]);
-            tmpstate = tokens->strstate;
-            tokens->strstate = ft_calloc(sizeof(arg_state), k + 2);
-            tokens->strstate[k] = strstate;
+            ft_new_state(&strstate, tokens[x].args[i][j]);
+            tmpstate = tokens[x].strstate;
+            tokens[x].strstate = ft_calloc(sizeof(arg_state), k + 2);
+            tokens[x].strstate[k] = strstate;
             while(tmpstate && tmpstate[l])
             {
-                tokens->strstate[l] = tmpstate[l];
+                tokens[x].strstate[l] = tmpstate[l];
                 l++;
             }
             l = 0;
@@ -126,26 +126,36 @@ void ft_save_state(t_tokens *tokens)
 void    ft_last_parsing(t_tokens *tokens)
 {
     int i;
+    int j;
     char *tmp;
     char *tokentmp;
 
     i = 0;
+    j = 0;
     tmp = NULL;
     tokentmp = NULL;
-    ft_save_state(tokens);
-    while(tokens->args[i])
-    {
-        tmp = ft_strjoin(tokentmp, tokens->args[i]);
-        if (tokentmp)
-            free(tokentmp);
-        if (tokens->args[i + 1])
-            tokentmp = ft_strjoin(tmp, " ");
-        else
-            tokentmp = ft_strdup(tmp);
-        free(tmp);
-        tokens->args[i] = ft_parsing_end(tokens->args[i]);
-        i++;
+    ft_save_state(tokens, j);
+    while (tokens[j].token)
+    {    
+        while(tokens[j].args[i])
+        {
+            tmp = ft_strjoin(tokentmp, tokens[j].args[i]);
+            if (tokentmp)
+                free(tokentmp);
+            if (tokens[j].args[i + 1])
+                tokentmp = ft_strjoin(tmp, " ");
+            else
+                tokentmp = ft_strdup(tmp);
+            free(tmp);
+            tokens[j].args[i] = ft_parsing_end(tokens[j].args[i]);
+            i++;
+        }
+        i = 0;
+        free(tokens[j].token);
+        tokens[j].token = ft_strdup(tokentmp);
+        free(tokentmp);
+        tokentmp = NULL;
+        j++;
     }
-    free(tokens->token);
-    tokens->token = tokentmp;
+    
 }
