@@ -45,7 +45,7 @@ int ft_change_agstate_2(arg_state cstate, arg_state *agstate)
 
 arg_state ft_find_cstate(char c, char next)
 {
-    if (c == '>' || (c == '>' &&  next == '>')
+    if ( c == '|' || c == '>' || (c == '>' &&  next == '>')
     || c == '<' || (c == '<' &&  next == '<'))
         return (OP);
     if (c == 32 && next != 32)

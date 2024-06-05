@@ -76,7 +76,7 @@ void	ft_printtabtab(char **tb)
     i = 0;
 	while (tb[i])
 	{
-		printf("%s\n", tb[i]);
+		printf("[%s]\n", tb[i]);
         i++;
 	}
 }

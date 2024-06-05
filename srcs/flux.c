@@ -16,7 +16,7 @@ static e_flux ft_redirect_output(int *fd, char **args, int i)
     return (OUT);
 }
 
-void    ft_heredock(char *end)
+void    ft_heredock(char *end, t_flux *flux)
 {
     int pipefd[2];
     char *str;
@@ -26,33 +26,35 @@ void    ft_heredock(char *end)
     pipe(pipefd);
     tmp = NULL;
     heredoc = NULL;
-    write(1, "> ", 2);
-    str = get_next_line(0);
-    while (ft_strncmp(str, end, ft_strlen(str) - 1) != 0)
+    write(flux->saveout, "> ", 2);
+    str = get_next_line(flux->savein);
+    while (!(ft_strncmp(str, end, ft_strlen(str) - 1) == 0 && ft_strlen(str) - 1 == ft_strlen(end)))
     {
         tmp = heredoc;
         heredoc = ft_strjoin(heredoc, str);
         if (str)
             free(str);
-        write(1, "> ", 2);
-        str = get_next_line(0);
+        write(flux->saveout, "> ", 2);
+        str = get_next_line(flux->savein);
         if (tmp)
             free(tmp);
     }
+    free(str);
     write(pipefd[1], heredoc, ft_strlen(heredoc));
     close(pipefd[1]);
     dup2(pipefd[0], STDIN_FILENO);
     close(pipefd[0]);
+    free(heredoc);
 }
 
-static e_flux    ft_redirect_input(int *fd, char **args, int i)
+static e_flux    ft_redirect_input(t_flux *flux, char **args, int i)
 {
     if (ft_strcmp(args[i], "<<") == 0)
-        ft_heredock(args[i + 1]);
+        ft_heredock(args[i + 1], flux);
     else if(args[i][0] == '<' && ft_strlen(args[i]) == 1)
     {
-        *fd = open(args[i + 1],  O_RDONLY);
-        dup2(*fd, STDIN_FILENO);
+        flux->actualfd = open(args[i + 1],  O_RDONLY);
+        dup2(flux->actualfd, STDIN_FILENO);
     }
     return (IN);
 }
@@ -86,7 +88,7 @@ static e_flux   ft_redirect_flux(char **args, t_index *index, t_flux *flux, int 
             flux->actualflux = IN;
         if (flux->actualfd == -1)
             return(ERR);
-        ft_redirect_input(&flux->actualfd , args, index->i);
+        ft_redirect_input(flux , args, index->i);
     }
     return(IN);
     index->k = 1;

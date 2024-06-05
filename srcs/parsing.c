@@ -89,7 +89,6 @@ char    **ft_sort_uprompt(char *str)
     }
     if (newstr)
         free(newstr);
-    //ft_printtabtab(arg.args);
     return (arg.args);
 }
 
@@ -124,6 +123,7 @@ char    **ft_sort_token(char **tb)
     int i;
     int j;
     char    **tokens;
+    char    *tmp;
 
     i = 0;
     j = 0;
@@ -131,13 +131,15 @@ char    **ft_sort_token(char **tb)
     tokens = ft_tb_realloc(tokens);
     while (tb[i])
     {
-        if (tb[i][0] == '|' && ft_strlen(tb[i]) == 1)
+        tmp = ft_strtrim(tb[i], " \n");
+        if (tmp[0] == '|' && ft_strlen(tmp) == 1)
         {
             tokens = ft_tb_realloc(tokens);
             j++;
             i++;
         }
         tokens[j] = ft_join_space(tokens[j], tb[i]);
+        free(tmp);
         i++;
     }
     ft_freetabtab(tb);

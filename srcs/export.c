@@ -102,10 +102,13 @@ void    ft_display_export(char **export_tab)
         printf ("declare -x ");
         while (export_tab[i][j])
         {
-            if (export_tab[i][j - 1] == '=' && count == 0)
+            if (j > 1)
             {
-                printf("\"");
-                count = 1;
+                if (export_tab[i][j - 1] == '=' && count == 0)
+                {
+                    printf("\"");
+                    count = 1;
+                }
             }
             printf("%c", export_tab[i][j]);
             j++;

@@ -5,7 +5,6 @@ void ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulu
     int i;
 
     i = 0;
-    //printf("token.token = %s\n", tokens[index->j].token);
     tokens[index->j].args = ft_checkredirect(tokens, brulux, index->j);
     if (tokens[index->j].args == NULL)
         return (ft_change_flux(&brulux->actualflux, brulux->savein, brulux->saveout));
@@ -23,7 +22,6 @@ void ft_prompt_exec(t_tokens *tokens, t_index *index, char ***env, t_flux *brulu
     free(tokens[index->j].token);
     if (brulux->actualflux != INIT)
         ft_change_flux(&brulux->actualflux, brulux->savein, brulux->saveout);
-    index->j++;
 }
 
 char    **ft_create_path(char *path, char *cmd)
@@ -84,9 +82,6 @@ void    ft_exec(char *cmd, char **arg, char **env)
         ft_freetabtab(path);
         wait(&status);
         if (WIFEXITED(status))
-        {
             g_exit = WEXITSTATUS(status);
-            printf("%d\n", g_exit);
-        }
     }
 }
