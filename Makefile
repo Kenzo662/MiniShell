@@ -17,6 +17,7 @@ LST_SRCS =	main.c\
 			builtins.c \
 			parsing_env.c \
 			parsing_end.c \
+			last_parsing.c \
 			parsing_utils.c \
 			builtins_exec.c \
 			parsing_utils2.c \
