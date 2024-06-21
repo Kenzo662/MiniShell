@@ -1,6 +1,16 @@
-#include "../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kenz <kenz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:36 by evella            #+#    #+#             */
+/*   Updated: 2024/06/20 16:36:58 by kenz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		g_exit;
+#include "../include/minishell.h"
 
 void	ft_handler(int sig)
 {
@@ -8,7 +18,7 @@ void	ft_handler(int sig)
 	{
 		rl_on_new_line();
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
+		rl_replace_line("", 1);
 		rl_redisplay();
 	}
 	else
@@ -18,34 +28,63 @@ void	ft_handler(int sig)
 		printf("  \b\b");
 	}
 }
-void	ft_minishell(t_tokens *tokens, t_index *index, t_flux *brulux,
+
+static void	ft_pipe(t_tokens *tokens, t_index *index, int state)
+{
+	if (state == 0)
+	{
+		pipe(tokens[index->j].pipefd);
+		dup2(tokens[index->j].pipefd[1], STDOUT_FILENO);
+		close(tokens[index->j].pipefd[1]);
+	}
+	else
+	{
+		dup2(tokens[index->j].pipefd[0], STDIN_FILENO);
+		close(tokens[index->j].pipefd[0]);
+	}
+}
+
+static int	set_tmp(t_tokens *tokens, int tmp, t_index index)
+{
+	tmp = tokens[0].rexit;
+	if (tokens[index.j].args)
+	{
+		ft_freetabtab(tokens[index.j].args);
+		free(tokens[index.j].strstate);
+		free(tokens[index.j].token);
+	}
+	free(tokens);
+	tokens = NULL;
+	return (tmp);
+}
+
+static int	ft_minishell(t_tokens *tokens, t_index *index, t_flux *brulux,
 		char ***env)
 {
+	int	tmp;
+
+	tmp = 0;
 	while (index->k < 0)
 	{
 		index->j = -1;
-		tokens = ft_receive_uprompt(ft_print_prompt(), *env);
+		tokens = ft_receive_uprompt(ft_print_prompt(), *env, &tmp);
+		if (tokens == NULL)
+			return (tmp);
 		while (tokens[++index->j].token)
 		{
 			if (tokens[index->j + 1].token)
-			{
-				pipe(tokens[index->j].pipefd);
-				dup2(tokens[index->j].pipefd[1], STDOUT_FILENO);
-				close(tokens[index->j].pipefd[1]);
-			}
+				ft_pipe(tokens, index, 0);
 			else if (!tokens[index->j + 1].token && index->j > 0)
 				dup2(brulux->saveout, STDOUT_FILENO);
 			ft_prompt_exec(tokens, index, env, brulux);
 			if (tokens[index->j + 1].token)
-			{
-				dup2(tokens[index->j].pipefd[0], STDIN_FILENO);
-				close(tokens[index->j].pipefd[0]);
-			}
+				ft_pipe(tokens, index, 1);
 			else if (!tokens[index->j + 1].token && index->j > 0)
 				dup2(brulux->savein, STDIN_FILENO);
 		}
-		free(tokens);
+		tmp = set_tmp(tokens, tmp, *index);
 	}
+	return (tmp);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -53,8 +92,8 @@ int	main(int ac, char **av, char **envp)
 	t_tokens	*tokens;
 	t_index		index;
 	char		***env;
-	char		*cleararg[] = {"clear", NULL};
 	t_flux		brulux;
+	char		*tmp;
 
 	(void)ac;
 	(void)av;
@@ -68,10 +107,10 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, ft_handler);
 	env = ft_calloc(sizeof(char **), 1);
 	*env = ft_create_env(envp);
-	// ft_exec("clear", cleararg, *env);
-	ft_minishell(tokens, &index, &brulux, env);
-	ft_freetabtab(*env);
-	free(env);
+	tmp = ft_get_env(*env, "SHLVL");
+	//*env = ft_shlvl(*env, ft_atoi(tmp));
+	//ft_clear(*env);
+	index.r = ft_minishell(tokens, &index, &brulux, env);
 	rl_clear_history();
-	return (index.k);
+	return (ft_freetabtab(*env), free(env), free(tmp), index.r);
 }

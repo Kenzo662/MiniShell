@@ -6,7 +6,7 @@
 /*   By: evella <evella@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 23:06:41 by evella            #+#    #+#             */
-/*   Updated: 2024/05/28 17:20:24 by evella           ###   ########.fr       */
+/*   Updated: 2024/06/06 15:59:00 by evella           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
 	int		len;
-	
+
 	if (!s1 && !s2)
 		return (NULL);
 	else if (!s1)

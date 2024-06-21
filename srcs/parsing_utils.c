@@ -1,53 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: evella <enzovella6603@gmail.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:41 by evella            #+#    #+#             */
+/*   Updated: 2024/06/10 15:43:34 by evella           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-arg_state	ft_find_cstate_2(char c, char next)
-{
-	if (c == 32 && next != 32)
-		return (FSPACE);
-	else if (c == 0)
-		return (FSPACE);
-	else if (c == 39)
-		return (QUOTE);
-	else if (c == 34)
-		return (DQUOTE);
-	else if (c == 32)
-		return (DSPACE);
-	else
-		return (SEARCH);
-}
-
-int	ft_change_agstate_2(arg_state cstate, arg_state *agstate)
-{
-	if (*agstate == SEARCH && cstate != DSPACE)
-	{
-		if (cstate == DQUOTE || cstate == QUOTE)
-			*agstate = cstate;
-		else
-			*agstate = FSPACE;
-		return (1);
-	}
-	else if (*agstate == SEARCH && cstate == DSPACE)
-		return (0);
-	else if ((cstate == FSPACE || cstate == DSPACE) && *agstate == FSPACE)
-	{
-		*agstate = SEARCH;
-		return (3);
-	}
-	else if ((cstate == DQUOTE && *agstate == DQUOTE) || (cstate == QUOTE
-			&& *agstate == QUOTE))
-		*agstate = FSPACE;
-	else if ((cstate == DQUOTE || cstate == QUOTE) && (*agstate != DQUOTE
-			&& *agstate != QUOTE))
-		*agstate = cstate;
-	return (2);
-}
-
-arg_state	ft_find_cstate(char c, char next)
+t_arg_state	ft_find_cstate(char c, char next)
 {
 	if (c == '|' || c == '>' || (c == '>' && next == '>') || c == '<'
 		|| (c == '<' && next == '<'))
 		return (OP);
-	if (c == 32 && next != 32)
+	if ((c == 32 || c == '\n' || c == '\t')
+		&& (next != 32 && next != '\n' && next != '\t'))
 		return (FSPACE);
 	else if (c == 0)
 		return (FSPACE);
@@ -55,45 +26,37 @@ arg_state	ft_find_cstate(char c, char next)
 		return (QUOTE);
 	else if (c == 34)
 		return (DQUOTE);
-	else if (c == 32)
+	else if (c == 32 || c == '\n')
 		return (DSPACE);
 	else
 		return (SEARCH);
 }
 
-int	ft_change_agstate(arg_state cstate, arg_state *agstate, int j)
+int	ft_change_agstate(t_arg_state cs, t_arg_state *ags, int j)
 {
-	if ((*agstate == SEARCH && cstate != DSPACE) || (*agstate == FSPACE
-			&& cstate == OP))
+	if ((*ags == SEARCH && cs != DSPACE) || (*ags == FSPACE && cs == OP))
 	{
-		if (*agstate == FSPACE && cstate == OP && j > 0)
-		{
-			*agstate = SEARCH;
-			return (3);
-		}
-		if (cstate == DQUOTE || cstate == QUOTE)
-			*agstate = cstate;
-		else if (cstate == OP)
-			*agstate = OP;
+		if (*ags == FSPACE && cs == OP && j > 0)
+			return (*ags = SEARCH, 3);
+		if (cs == DQUOTE || cs == QUOTE)
+			*ags = cs;
+		else if (cs == OP)
+			*ags = OP;
 		else
-			*agstate = FSPACE;
+			*ags = FSPACE;
 		return (1);
 	}
-	else if (*agstate == SEARCH && cstate == DSPACE)
+	else if (*ags == SEARCH && cs == DSPACE)
 		return (0);
-	else if (((cstate == FSPACE || cstate == DSPACE || cstate == OP)
-			&& *agstate == FSPACE) || ((cstate == SEARCH || cstate == DQUOTE
-				|| cstate == QUOTE) && *agstate == OP))
-	{
-		*agstate = SEARCH;
-		return (3);
-	}
-	else if ((cstate == DQUOTE && *agstate == DQUOTE) || (cstate == QUOTE
-			&& *agstate == QUOTE))
-		*agstate = FSPACE;
-	else if ((cstate == DQUOTE || cstate == QUOTE) && (*agstate != DQUOTE
-			&& *agstate != QUOTE))
-		*agstate = cstate;
+	else if (((cs == FSPACE || cs == DSPACE || cs == OP)
+			&& *ags == FSPACE) || (cs != OP && *ags == OP))
+		return (*ags = SEARCH, 3);
+	else if ((cs == DQUOTE && *ags == DQUOTE) || (cs == QUOTE
+			&& *ags == QUOTE))
+		*ags = FSPACE;
+	else if ((cs == DQUOTE || cs == QUOTE) && (*ags != DQUOTE
+			&& *ags != QUOTE))
+		*ags = cs;
 	return (2);
 }
 
@@ -107,6 +70,7 @@ void	ft_new_arg(t_arg *arg, t_index *index)
 	free((*arg).arg);
 	(*arg).arg = NULL;
 }
+
 void	ft_joinarg(t_arg *arg, char *str, t_index *index)
 {
 	(*arg).arg = ft_realloc((*arg).arg);
@@ -117,8 +81,10 @@ void	ft_joinarg(t_arg *arg, char *str, t_index *index)
 char	*ft_join_space(char *s1, char *s2)
 {
 	char	*newstr;
-	char	sp[] = {" "};
+	char	sp[2];
 
+	sp[0] = ' ';
+	sp[1] = '\0';
 	if (!s1)
 		return (ft_strdup(s2));
 	newstr = ft_strjoin(s1, sp);

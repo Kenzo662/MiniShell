@@ -6,7 +6,7 @@
 /*   By: evella <evella@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 00:05:48 by evella            #+#    #+#             */
-/*   Updated: 2023/10/03 10:50:18 by evella           ###   ########.fr       */
+/*   Updated: 2024/06/06 16:00:14 by evella           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	i = 0;
 	if (!s1 && !s2)
-		return(0);
+		return (0);
 	if (!s1 || !s2)
 		return (1);
 	while (s1[i] || s2[i])

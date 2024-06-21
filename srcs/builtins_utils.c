@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: evella <enzovella6603@gmail.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:22 by evella            #+#    #+#             */
+/*   Updated: 2024/06/07 12:31:14 by evella           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	ft_check_env(char *str)
@@ -37,11 +49,29 @@ char	*ft_cutdir(char *path, char *arg)
 	return (newpath);
 }
 
+void	ft_cut_get_env(char **value_var, char **var_tab, int *j)
+{
+	char	*tmp;
+
+	*value_var = ft_strdup(var_tab[1]);
+	if (var_tab[2])
+	{
+		while (var_tab[*j])
+		{
+			tmp = ft_strjoin(*value_var, "=");
+			if (*value_var)
+				free(*value_var);
+			*value_var = ft_strjoin(tmp, var_tab[*j]);
+			(*j)++;
+			free(tmp);
+		}
+	}
+}
+
 char	*ft_get_env(char **env, char *var_name)
 {
 	char	*value_var;
 	char	**var_tab;
-	char	*tmp;
 	int		i;
 	int		j;
 
@@ -54,19 +84,7 @@ char	*ft_get_env(char **env, char *var_name)
 		var_tab = ft_split(env[i], '=');
 		if (ft_strcmp(var_name, var_tab[0]) == 0)
 		{
-			value_var = ft_strdup(var_tab[1]);
-			if (var_tab[2])
-			{
-				while (var_tab[j])
-				{
-					tmp = ft_strjoin(value_var, "=");
-					if (value_var)
-						free(value_var);
-					value_var = ft_strjoin(tmp, var_tab[j]);
-					j++;
-					free(tmp);
-				}
-			}
+			ft_cut_get_env(&value_var, var_tab, &j);
 			return (ft_freetabtab(var_tab), value_var);
 		}
 		ft_freetabtab(var_tab);

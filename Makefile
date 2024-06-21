@@ -1,19 +1,21 @@
 CC = gcc
 
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 
 DIR_SRCS	=	srcs
 DIR_OBJS	=	.objs
 
-LST_SRCS =	main.c\
-			flux.c\
+LST_SRCS =	main.c \
+			flux.c \
 			exec.c \
 			exit.c \
+			flux2.c \
 			utils.c \
 			export.c \
 			parsing.c \
+			parsing2.c \
 			builtins.c \
 			parsing_env.c \
 			parsing_end.c \
@@ -40,14 +42,14 @@ $(DIR_OBJS)/%.o : $(DIR_SRCS)/%.c
 	@mkdir -p .objs
 	@$(CC) $(CFLAGS) -o $@ -c $<
 	@printf "$(BLUE) > Compilation :$(END) $<\n"
-	
+
 
 $(NAME) :   $(OBJS)
 	@printf "$(GREEN).c are compiled\n$(END)"
 	@printf "$(BLUE) > Libft Compilation ...\n$(END)"
 	@$(MAKE) -C libft
 	@printf "$(ERASE)$(GREEN)Libft made !\n$(END)"
-	@$(CC) $(OBJS) $(CFLAGS)  -L./libft/ -lft -I$(brew --prefix readline)/include -L$(brew --prefix readline)/lib -lreadline -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) -L./libft/ -lft -I$(brew --prefix readline)/include -L$(brew --prefix readline)/lib -lreadline -o $(NAME)
 	@printf "$(ERASE)$(GREEN)Minishell made !\n$(END)"
 
 clean   :
@@ -59,5 +61,5 @@ fclean  :   clean
 	@printf "$(YELLOW)Minishell removed$(END)\n"
 	@make fclean -C libft
 	@rm -f $(NAME)
-	
+
 re      :   fclean all

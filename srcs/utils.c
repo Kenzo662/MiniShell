@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: evella <enzovella6603@gmail.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:48 by evella            #+#    #+#             */
+/*   Updated: 2024/06/10 15:23:17 by evella           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	*ft_realloc(char *str)
@@ -73,22 +85,34 @@ void	ft_printtabtab(char **tb)
 	i = 0;
 	while (tb[i])
 	{
-		printf("[%s]\n", tb[i]);
+		printf("%s\n", tb[i]);
 		i++;
 	}
 }
 
-void	ft_print_tokens(t_tokens *tokens)
+void	ft_clear(char **env)
 {
-	int	i;
+	int		status;
+	int		execr;
+	int		i;
+	char	**path;
+	char	**cleararg;
+	pid_t	pid;
 
-	i = 0;
-	ft_printf("[//////////////////////////]\n");
-	while (tokens[i].token)
+	cleararg = (char **)malloc(sizeof(char *) * 2);
+	cleararg[0] = ft_strdup("clear");
+	cleararg[1] = NULL;
+	i = -1;
+	pid = fork();
+	if (pid == 0)
 	{
-		ft_printf("[TOKEN]\n%s\n[ARGS]\n", (tokens[i]).token);
-		ft_printtabtab((tokens[i]).args);
-		ft_printf("[//////////////////////////]\n");
-		i++;
+		path = ft_create_path(getenv("PATH"), "clear");
+		execr = access(path[0], X_OK);
+		while (execr == -1 && path[++i])
+			execr = access(path[i], X_OK);
+		execve("clear", cleararg, env);
 	}
+	else
+		wait(&status);
+	ft_freetabtab(cleararg);
 }

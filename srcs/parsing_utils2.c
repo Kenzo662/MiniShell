@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kenz <kenz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:44 by evella            #+#    #+#             */
+/*   Updated: 2024/06/20 16:36:44 by kenz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static char	*ft_cut_gnl(void)
@@ -21,7 +33,7 @@ int	ft_find_arg(char *str, t_arg *arg, t_index *index)
 		arg->strstate = ft_change_agstate(ft_find_cstate(str[index->i],
 					str[index->i + 1]), &arg->agstate, index->j);
 		if ((arg->strstate == 1 || arg->strstate == 2) && (str[index->i] != 32
-				|| arg->arg))
+				|| arg->arg) && str[index->i] != '\n' && str[index->i] != '\t')
 			ft_joinarg(arg, str, index);
 		else if (arg->strstate == 3)
 			ft_new_arg(arg, index);
@@ -37,6 +49,7 @@ int	ft_find_arg(char *str, t_arg *arg, t_index *index)
 	}
 	return (1);
 }
+
 int	ft_find_arg_2(char *str, t_arg *arg, t_index *index)
 {
 	while (str && str[index->i])
@@ -78,3 +91,17 @@ char	*ft_gnl(char *str)
 		free(tmp2);
 	return (str);
 }
+
+/* char	**ft_shlvl(char **env, int shlvl)
+{
+	char	*tmp;
+	char	*str;
+
+	shlvl++;
+	str = ft_itoa(shlvl);
+	tmp = ft_strjoin("SHLVL=", str);
+	env = ft_export(tmp, env);
+	free(tmp);
+	free(str);
+	return (env);
+} */

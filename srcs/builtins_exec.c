@@ -1,23 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_exec.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kenz <kenz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 15:26:18 by evella            #+#    #+#             */
+/*   Updated: 2024/06/20 16:46:50 by kenz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-int	ft_builtins_exec(t_tokens token, char ***env)
+unsigned int	ft_builtins_exec(t_tokens token, char ***env, unsigned int *rexit, int saveout)
 {
 	char	buf[4096];
 
 	if (!token.args[0] || !token.args[0][0])
 		return (-1);
 	if (ft_strcmp(token.args[0], "cd") == 0)
-		return (ft_cd(token.args), -1);
+		return (ft_cd(token.args, saveout, rexit), -1);
 	else if (ft_strcmp(token.args[0], "echo") == 0)
-		return (ft_echo(token), -1);
+		return (ft_echo(token, rexit), -1);
 	else if (ft_strcmp(token.args[0], "pwd") == 0)
-		return (printf("%s\n", getcwd(buf, 4096)), -1);
+		return (printf("%s\n", getcwd(buf, 4096)), *rexit = 0, -1);
 	else if (ft_strcmp(token.args[0], "env") == 0)
 		return (ft_printtabtab(*env), -1);
 	else if (ft_strcmp(token.args[0], "exit") == 0)
-		return (ft_exit(token.args));
+		return (ft_exit(token.args, rexit));
 	else
-		return (ft_exec(token.args[0], token.args, *env), -1);
+		return (ft_exec(token, *env, rexit, saveout), -1);
 	return (-1);
 }
 
@@ -65,14 +77,14 @@ char	**ft_tab_cat(char **tb, int pos)
 	return (newenv);
 }
 
-char	**ft_export_exec(char **args, char **env)
+char	**ft_export_exec(char **args, char **env, unsigned int *rexit)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!args[1])
-		env = ft_export(NULL, env);
+		env = ft_export(NULL, env, rexit);
 	while (args[++i])
-		env = ft_export(args[i], env);
+		env = ft_export(args[i], env, rexit);
 	return (env);
 }
